@@ -1,4 +1,4 @@
-﻿public class PriceCalculator : IMetalPriceCalculator
+﻿public class MetalPriceCalculator : IMetalPriceCalculator
 {
      
 

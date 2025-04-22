@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Infrastructure
+﻿namespace Infrastructure
 {
-    public class ServiceCollectionExtension
+    public static class ServiceCollectionExtension
     {
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<IMetalPriceCalculator, MetalPriceCalculator>();
+            return services;
+
+
+        }
     }
 }
