@@ -1,0 +1,83 @@
+@page "/coin"
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<h3>محاسبه قیمت سکه امامی</h3>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label for="goldOunce">قیمت انس جهانی طلا (دلار)</label>
+                <input type="number" class="form-control" id="goldOunce" @bind="goldOunce" step="0.01" />
+            </div>
+            <div class="form-group mb-3">
+                <label for="dollar">قیمت دلار (تومان)</label>
+                <input type="number" class="form-control" id="dollar" @bind="dollar" step="1" />
+            </div>
+            <button class="btn btn-primary" @onclick="CalculatePrice">محاسبه</button>
+        </div>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="mt-4">
+            <p>در حال محاسبه...</p>
+        </div>
+    }
+    else if (result.HasValue)
+    {
+        <div class="mt-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    نتیجه محاسبه
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">قیمت تقریبی سکه امامی</h5>
+                    <p class="card-text display-4">@result.Value.ToString("N0") تومان</p>
+                </div>
+            </div>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="mt-4 alert alert-danger">
+            @errorMessage
+        </div>
+    }
+</div>
+
+@code {
+    private double goldOunce;
+    private double dollar;
+    private double? result;
+    private bool isLoading = false;
+    private string errorMessage = string.Empty;
+
+    private async Task CalculatePrice()
+    {
+        if (goldOunce <= 0 || dollar <= 0)
+        {
+            errorMessage = "لطفا مقادیر معتبر وارد کنید";
+            return;
+        }
+
+        try
+        {
+            isLoading = true;
+            errorMessage = string.Empty;
+            result = null;
+            
+            var response = await Http.GetFromJsonAsync<double>($"api/Price/coin?goldOunce={goldOunce}&dollar={dollar}");
+            result = response;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"خطا در محاسبه: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+} 

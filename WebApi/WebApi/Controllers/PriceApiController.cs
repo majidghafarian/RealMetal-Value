@@ -5,11 +5,11 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PriceApiController : ControllerBase
+    public class PriceController : ControllerBase
     {
         private readonly IMetalPriceCalculator _calculator;
 
-        public PriceApiController(IMetalPriceCalculator calculator)
+        public PriceController(IMetalPriceCalculator calculator)
         {
             _calculator = calculator;
         }
